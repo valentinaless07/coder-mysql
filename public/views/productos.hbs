@@ -10,9 +10,9 @@
             </tr>
             {{#each product}}
             <tr class="border border-4 border-light text-white rounded">
-                <td class="p-3">{{this.nombre}}</td>
-                <td class="p-3">${{this.precio}}</td>
-                <td class="p-3 d-flex justify-content-center"><img class="w-50 h-75 p-3" src="{{this.foto}}" alt=""></td>
+                <td class="p-3">{{this.title}}</td>
+                <td class="p-3">${{this.price}}</td>
+                <td class="p-3 d-flex justify-content-center"><img class="w-50 h-75 p-3" src="{{this.thumbnail}}" alt=""></td>
             </tr>
             {{/each}}
         </table>

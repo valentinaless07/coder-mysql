@@ -1,24 +1,28 @@
 import { Router } from "express";
-import { deleteProduct, editProduct, getById, getProducts, postProduct } from "../controllers/productos.js";
+import Productos from  "../controllers/Contenedor.js";
+import { mariaDb } from "../options/mariaDb.js";
 
 const router = Router()
 
+const productos = new Productos(mariaDb, 'productos')
+
 router.get('/', async (req,res) => {
     try {
-    const products = await getProducts()
-    res.render('productos', { products } || { msg: "Producto no encontrado" })
+
+    const products = await productos.getProducts()
+    res.status(200).send(products)
     } catch (error) {
         console.log(error)
     }
     
 })
 
-router.get('/:id', (req,res) => {
+router.get('/:id', async (req,res) => {
 
     try {
     const {id} = req.params
     
-     const producto = getById(id)
+     const producto = await productos.getById(id)
 
      if(!producto){
          res.status(404).json({
@@ -26,7 +30,7 @@ router.get('/:id', (req,res) => {
          })
      }
 
-     res.status(200).json(producto)
+     res.status(200).send(producto)
     } catch (error) {
         console.log(error)
     }
@@ -37,7 +41,7 @@ router.post('/', async (req,res) => {
     try {
 
       
-         postProduct(req.body)
+         await productos.postProduct(req.body)
 
         
         
@@ -51,7 +55,7 @@ router.post('/', async (req,res) => {
 
 router.put('/:id', async (req,res) => {
     try {
-        const producto = await editProduct(req.body, req.params.id)
+        const producto = await productos.editProduct(req.body, req.params.id)
 
         if(!producto) res.status(404).json({error: 'producto no encontrado'})
         res.status(200).json(producto)
@@ -63,7 +67,7 @@ router.put('/:id', async (req,res) => {
 
 router.delete('/:id', async (req,res) => {
     try {
-        const producto = deleteProduct(req.params.id)
+        const producto = await productos.deleteProduct(req.params.id)
 
     if(!producto) res.status(404).json({error: 'producto no encontrado'})
     res.status(200).json(producto)
